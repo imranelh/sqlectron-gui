@@ -6,7 +6,7 @@ import Select from 'react-select';
 import Checkbox from './checkbox';
 import { mapObjectToConfig } from '../utils/config';
 
-require('react-select/dist/react-select.css');
+// require('react-select/dist/react-select.css');
 require('./override-select.css');
 
 export default class SettingsModalForm extends Component {

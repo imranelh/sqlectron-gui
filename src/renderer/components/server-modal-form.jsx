@@ -9,7 +9,7 @@ import Checkbox from './checkbox';
 import { requireClientLogo } from './require-context';
 import { ConnectionString } from 'connection-string';
 
-require('react-select/dist/react-select.css');
+// require('react-select/dist/react-select.css');
 require('./override-select.css');
 
 const CLIENTS = DB_CLIENTS.map((dbClient) => ({
@@ -21,6 +21,33 @@ const CLIENTS = DB_CLIENTS.map((dbClient) => ({
 }));
 
 const DEFAULT_SSH_PORT = 22;
+
+const clientOptionStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    borderBottom: '1px dotted pink',
+    color: state.isSelected ? 'red' : 'blue',
+    padding: 20,
+  }),
+  // control: () => ({
+  //   // none of react-select's styles are passed to <Control />
+  //   width: 200,
+  // }),
+  // singleValue: (provided, state) => {
+  //   const opacity = state.isDisabled ? 0.5 : 1;
+  //   const transition = 'opacity 300ms';
+  //   return { ...provided, opacity, transition };
+  // },
+};
+
+const ClientOption = ({ innerProps, ...props }) => {
+  console.log('***CustomClientOption', { innerProps, props });
+  return (
+    <div {...innerProps}>
+      <img alt="logo" src={props.data.logo} style={{ width: '16px' }} /> {props.label}
+    </div>
+  );
+};
 
 export default class ServerModalForm extends Component {
   static propTypes = {
@@ -118,6 +145,7 @@ export default class ServerModalForm extends Component {
   }
 
   handleOnClientChange(selected) {
+    console.log('***handleOnClientChange', selected);
     const client = selected.value || selected;
     this.setState({ client });
 
@@ -346,11 +374,13 @@ export default class ServerModalForm extends Component {
             <Select
               name="client"
               placeholder="Select"
+              components={{ Option: ClientOption }}
+              styles={clientOptionStyles}
               options={CLIENTS}
-              clearable={false}
+              isClearable={false}
               onChange={this.handleOnClientChange}
-              optionRenderer={this.renderClientItem}
-              valueRenderer={this.renderClientItem}
+              // optionRenderer={this.renderClientItem}
+              // valueRenderer={this.renderClientItem}
               value={this.state.client}
             />
           </div>
